@@ -1,0 +1,90 @@
+version: "3.1"
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - report_issue
+  - ask_submit
+  - ask_status
+  - provide_reference
+  - provide_issue
+  - provide_location
+  - request_human
+  - out_of_scope
+  - nlu_fallback
+entities:
+  - request_id
+slots:
+  request_id:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: request_id
+  service_category:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: issue_form
+            requested_slot: service_category
+  description:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: issue_form
+            requested_slot: description
+  location:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: issue_form
+            requested_slot: location
+  requested_slot:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  title:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+forms:
+  issue_form:
+    required_slots:
+      - service_category
+      - description
+      - location
+responses:
+  utter_greet:
+    - text: "Hello! I can help with local service issues, request submission, or checking an existing request. What do you need?"
+  utter_goodbye:
+    - text: "Goodbye. Your conversation will remain available while you are signed in."
+  utter_report_start:
+    - text: "I can help submit it. First, choose a service area: roads, water, waste, lighting, safety, or other."
+  utter_ask_issue_form_service_category:
+    - text: "Which service area fits best: roads, water and sanitation, waste management, street lighting, public safety, or other?"
+  utter_ask_issue_form_description:
+    - text: "Please describe the issue and its impact."
+  utter_ask_issue_form_location:
+    - text: "Where is the issue? Include a street, area, or nearby landmark."
+  utter_request_human:
+    - text: "You can contact the relevant local service office through the Public Service Portal. If there is immediate danger, contact emergency services."
+  utter_out_of_scope:
+    - text: "I can help with reporting local service problems and checking your requests. Please rephrase your question in that context."
+  utter_fallback:
+    - text: "I’m not sure I understood. You can ask about reporting a road, drainage, waste, water, or streetlight issue, or ask to check a request."
+actions:
+  - action_check_request_status
+  - validate_issue_form
+  - action_set_issue_title
+  - action_confirm_issue
+  - action_submit_issue
+  - action_cancel_issue

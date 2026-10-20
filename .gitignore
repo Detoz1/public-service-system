@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+.venv/
+venv/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Frontend
+node_modules/
+frontend/dist/
+
+# Uploaded media and local tooling
+backend/media/
+.vscode/
+.DS_Store
+
+# Python virtual environments and test caches
+**/.venv/
+**/venv/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/__pycache__/
+
+# Rasa generated caches and local databases
+**/.rasa/
+
+# Python virtual environments and test caches
+**/.venv/
+**/venv/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/__pycache__/
+
+# Rasa generated caches
+**/.rasa/

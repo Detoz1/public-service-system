@@ -1,0 +1,72 @@
+version: "3.1"
+nlu:
+  - intent: greet
+    examples: |
+      - hello
+      - hi
+      - good morning
+      - habari
+  - intent: goodbye
+    examples: |
+      - bye
+      - goodbye
+      - that's all thanks
+  - intent: affirm
+    examples: |
+      - yes
+      - yes please
+      - confirm
+  - intent: deny
+    examples: |
+      - no
+      - cancel
+      - don't submit
+  - intent: report_issue
+    examples: |
+      - I want to report a pothole
+      - report blocked drainage
+      - there is flooding in my area
+      - I need to report a waste problem
+      - our water supply is interrupted
+      - a streetlight is broken
+      - report a damaged road
+      - I want to make a public service request
+  - intent: provide_issue
+    examples: |
+      - The road has deep potholes that are dangerous for motorcycles
+      - Drainage is blocked and water is entering homes
+      - Several bags of rubbish have not been collected
+      - No water has come through our taps since yesterday
+      - The lamp beside the market stopped working
+  - intent: provide_location
+    examples: |
+      - near the market on Uhuru Road
+      - in Kiamumbi estate by the school
+      - opposite the county offices
+  - intent: ask_submit
+    examples: |
+      - how do I submit a service request
+      - can you help me report an issue
+      - how can I report a public problem
+  - intent: ask_status
+    examples: |
+      - check my request status
+      - has my issue been resolved
+      - track service request [a84c2b73-7f20-4aa1-9eaf-1fd695bb6fa0](request_id)
+      - status of request [8b0a7c95-1ea5-4e35-9f37-bf0836818473](request_id)
+  - intent: provide_reference
+    examples: |
+      - [a84c2b73-7f20-4aa1-9eaf-1fd695bb6fa0](request_id)
+  - intent: request_human
+    examples: |
+      - I want to speak to a person
+      - human support please
+      - connect me with an officer
+  - intent: out_of_scope
+    examples: |
+      - tell me a joke
+      - what is the weather
+      - help me with my university application
+  - intent: nlu_fallback
+    examples: |
+      - asdfghjkl

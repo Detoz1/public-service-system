@@ -1,0 +1,403 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Admin sign in" %} | Public Service Portal{% endblock %}
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+{% block usertools %}{% endblock %}
+{% block nav-global %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+{% block content_title %}{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  {{ form.media }}
+  <style>
+    html,
+    body.login {
+      min-height: 100%;
+      margin: 0;
+      background: #f4f7f4;
+      color: #102b3a;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+    }
+
+    body.login #container {
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      background: #f4f7f4;
+    }
+
+    body.login #header,
+    body.login #footer,
+    body.login #main > #nav-sidebar,
+    body.login #content > br.clear {
+      display: none;
+    }
+
+    body.login #main,
+    body.login #content-start,
+    body.login #content,
+    body.login #content-main {
+      display: block;
+      width: 100%;
+      max-width: none;
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      overflow: visible;
+      background: transparent;
+    }
+
+    .ps-admin-layout {
+      display: grid;
+      min-height: 100vh;
+      grid-template-columns: minmax(0, 1.08fr) minmax(420px, 0.92fr);
+    }
+
+    .ps-admin-story {
+      position: relative;
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      padding: clamp(2rem, 5vw, 5rem);
+      background: linear-gradient(145deg, #07513f, #003d38 58%, #062c2b);
+      color: #fff;
+    }
+
+    .ps-admin-story::before,
+    .ps-admin-story::after {
+      position: absolute;
+      right: -7rem;
+      bottom: -12rem;
+      width: 32rem;
+      height: 32rem;
+      border: 1px solid rgb(255 255 255 / 10%);
+      border-radius: 50%;
+      content: "";
+      pointer-events: none;
+    }
+
+    .ps-admin-story::after {
+      right: -3rem;
+      bottom: -8rem;
+      width: 24rem;
+      height: 24rem;
+    }
+
+    .ps-admin-brand,
+    .ps-admin-story-copy,
+    .ps-admin-story-foot {
+      position: relative;
+      z-index: 1;
+    }
+
+    .ps-admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .ps-admin-brand-mark {
+      display: grid;
+      width: 3rem;
+      height: 3rem;
+      flex: 0 0 auto;
+      place-items: center;
+      border: 1px solid rgb(255 255 255 / 30%);
+      border-radius: 0.75rem;
+      background: rgb(255 255 255 / 10%);
+    }
+
+    .ps-admin-brand-mark svg {
+      width: 1.65rem;
+      height: 1.65rem;
+    }
+
+    .ps-admin-kicker {
+      margin: 0 0 1rem;
+      color: #a7f3d0;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .ps-admin-story-copy h1 {
+      max-width: 36rem;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(2.3rem, 4vw, 3.7rem);
+      line-height: 1.12;
+    }
+
+    .ps-admin-story-copy > p:last-child {
+      max-width: 34rem;
+      margin: 1.3rem 0 0;
+      color: rgb(255 255 255 / 82%);
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    .ps-admin-story-foot {
+      color: rgb(255 255 255 / 62%);
+      font-size: 0.75rem;
+    }
+
+    .ps-admin-panel {
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem clamp(1.5rem, 5vw, 4rem);
+      background: #fff;
+    }
+
+    .ps-admin-form-wrap {
+      width: 100%;
+      max-width: 28rem;
+    }
+
+    .ps-admin-eyebrow {
+      margin: 0 0 0.75rem;
+      color: #087d4d;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .ps-admin-form-wrap h2 {
+      margin: 0;
+      color: #102b3a;
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+
+    .ps-admin-intro {
+      margin: 0.8rem 0 1.8rem;
+      color: #607a91;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .ps-admin-error {
+      margin: 1rem 0;
+      border: 1px solid #fecaca;
+      border-radius: 0.5rem;
+      background: #fff1f2;
+      padding: 0.85rem 1rem;
+      color: #9f1239;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .ps-admin-field {
+      margin: 1.2rem 0;
+    }
+
+    .ps-admin-field label {
+      display: block;
+      margin-bottom: 0.45rem;
+      color: #263b47;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .ps-admin-field input {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 3rem;
+      border: 1px solid #cbd5d9;
+      border-radius: 0.5rem;
+      background: #fff;
+      padding: 0.7rem 0.85rem;
+      color: #102b3a;
+      font: inherit;
+      font-size: 0.95rem;
+    }
+
+    .ps-admin-field input:focus {
+      border-color: #087d4d;
+      outline: 3px solid rgb(8 125 77 / 18%);
+      outline-offset: 1px;
+    }
+
+    .ps-admin-field ul.errorlist {
+      margin: 0 0 0.4rem;
+      padding: 0;
+      color: #9f1239;
+      font-size: 0.8rem;
+      list-style: none;
+    }
+
+    .ps-admin-submit {
+      display: flex;
+      width: 100%;
+      min-height: 3.1rem;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 1.6rem;
+      border: 0;
+      border-radius: 0.5rem;
+      background: #087d4d;
+      color: #fff;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      transition: background-color 160ms ease;
+    }
+
+    .ps-admin-submit:hover {
+      background: #06663f;
+    }
+
+    .ps-admin-submit:focus-visible {
+      outline: 3px solid #2f9f6b;
+      outline-offset: 3px;
+    }
+
+    .ps-admin-security {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      margin-top: 1.5rem;
+      border: 1px solid #dcebe0;
+      border-radius: 0.5rem;
+      background: #f0f8f2;
+      padding: 0.9rem 1rem;
+      color: #176b48;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .ps-admin-security svg,
+    .ps-admin-submit svg {
+      width: 1.1rem;
+      height: 1.1rem;
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 860px) {
+      .ps-admin-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .ps-admin-story {
+        min-height: 19rem;
+        padding: 2rem 1.5rem;
+      }
+
+      .ps-admin-story-copy {
+        margin-top: 3rem;
+      }
+
+      .ps-admin-story-copy h1 {
+        font-size: 2rem;
+      }
+
+      .ps-admin-story-copy > p:last-child {
+        margin-top: 0.75rem;
+        font-size: 0.9rem;
+      }
+
+      .ps-admin-story-foot {
+        display: none;
+      }
+
+      .ps-admin-panel {
+        min-height: auto;
+        padding: 2.5rem 1.5rem 3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .ps-admin-story {
+        min-height: 16rem;
+        padding: 1.5rem 1.25rem;
+      }
+
+      .ps-admin-brand {
+        font-size: 1rem;
+      }
+
+      .ps-admin-panel {
+        padding-right: 1.25rem;
+        padding-left: 1.25rem;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block branding %}
+  <div id="site-name"><a href="{% url 'admin:index' %}">Public Service Portal</a></div>
+{% endblock %}
+
+{% block content %}
+  <div class="ps-admin-layout">
+    <section class="ps-admin-story" aria-labelledby="admin-welcome">
+      <div class="ps-admin-brand">
+        <span class="ps-admin-brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-6 9 6M4 10h16M5 10v9m4-9v9m6-9v9m4-9v9M3 20h18M2 22h20" /></svg>
+        </span>
+        <span>Public Service Portal</span>
+      </div>
+      <div class="ps-admin-story-copy">
+        <p class="ps-admin-kicker">Authorized access</p>
+        <h1 id="admin-welcome">Service operations, with accountability.</h1>
+        <p>Review community reports, manage service requests, and keep citizens informed through one secure workspace.</p>
+      </div>
+      <p class="ps-admin-story-foot">Administration access is for authorized staff.</p>
+    </section>
+
+    <section class="ps-admin-panel" aria-labelledby="admin-login-heading">
+      <div class="ps-admin-form-wrap">
+        <p class="ps-admin-eyebrow">Staff administration</p>
+        <h2 id="admin-login-heading">Sign in to continue</h2>
+        <p class="ps-admin-intro">Use your Django staff or superuser account to access service management.</p>
+
+        {% if form.errors and not form.non_field_errors %}
+          <p class="ps-admin-error" role="alert">{% translate "Please correct the errors below." %}</p>
+        {% endif %}
+        {% for error in form.non_field_errors %}
+          <p class="ps-admin-error" role="alert">{{ error }}</p>
+        {% endfor %}
+        {% if user.is_authenticated %}
+          <p class="ps-admin-error" role="alert">{% blocktranslate %}You are signed in as {{ username }}, but that account cannot access administration. Sign in with an authorized staff account.{% endblocktranslate %}</p>
+        {% endif %}
+
+        <form action="{{ app_path }}" method="post" id="login-form">
+          {% csrf_token %}
+          <div class="ps-admin-field">
+            {{ form.username.errors }}
+            <label for="id_username">{% translate "Username" %}</label>
+            {{ form.username }}
+          </div>
+          <div class="ps-admin-field">
+            {{ form.password.errors }}
+            <label for="id_password">{% translate "Password" %}</label>
+            {{ form.password }}
+          </div>
+          <input type="hidden" name="next" value="{{ next }}">
+          <button class="ps-admin-submit" type="submit">
+            {% translate "Sign in" %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+          </button>
+        </form>
+
+        <div class="ps-admin-security">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 1 1 8 0v3" /></svg>
+          <span>Protected staff access. Citizen portal accounts cannot sign in to Django administration.</span>
+        </div>
+      </div>
+    </section>
+  </div>
+{% endblock %}

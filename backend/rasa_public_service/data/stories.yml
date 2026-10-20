@@ -1,0 +1,32 @@
+version: "3.1"
+stories:
+  - story: citizen says goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+  - story: citizen asks about services
+    steps:
+      - intent: greet
+      - action: utter_greet
+  - story: citizen submits an issue with confirmation
+    steps:
+      - intent: report_issue
+      - action: action_set_issue_title
+      - action: issue_form
+      - active_loop: issue_form
+      - action: issue_form
+      - active_loop: null
+      - action: action_confirm_issue
+      - intent: affirm
+      - action: action_submit_issue
+  - story: citizen cancels an issue
+    steps:
+      - intent: report_issue
+      - action: action_set_issue_title
+      - action: issue_form
+      - active_loop: issue_form
+      - action: issue_form
+      - active_loop: null
+      - action: action_confirm_issue
+      - intent: deny
+      - action: action_cancel_issue

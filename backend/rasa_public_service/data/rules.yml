@@ -1,0 +1,55 @@
+version: "3.1"
+rules:
+  - rule: greet
+    steps:
+      - intent: greet
+      - action: utter_greet
+  - rule: goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+  - rule: start issue submission
+    steps:
+      - intent: report_issue
+      - action: action_set_issue_title
+      - action: issue_form
+      - active_loop: issue_form
+  - rule: complete issue details and confirm
+    condition:
+      - active_loop: issue_form
+    steps:
+      - action: issue_form
+      - active_loop: null
+      - action: action_confirm_issue
+  - rule: confirm issue submission
+    steps:
+      - intent: affirm
+      - action: action_submit_issue
+  - rule: cancel issue submission
+    steps:
+      - intent: deny
+      - action: action_cancel_issue
+  - rule: ask about submission
+    steps:
+      - intent: ask_submit
+      - action: utter_report_start
+  - rule: check request status
+    steps:
+      - intent: ask_status
+      - action: action_check_request_status
+  - rule: user supplies request reference
+    steps:
+      - intent: provide_reference
+      - action: action_check_request_status
+  - rule: human support
+    steps:
+      - intent: request_human
+      - action: utter_request_human
+  - rule: out of scope
+    steps:
+      - intent: out_of_scope
+      - action: utter_out_of_scope
+  - rule: fallback
+    steps:
+      - intent: nlu_fallback
+      - action: utter_fallback
