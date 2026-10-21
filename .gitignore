@@ -44,3 +44,7 @@ backend/media/
 # Deployment-generated files
 backend/staticfiles/
 backend/config/settings.py.backup
+
+# Deployment-generated files
+backend/staticfiles/
+backend/config/settings.py.backup
