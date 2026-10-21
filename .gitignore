@@ -40,3 +40,7 @@ backend/media/
 
 # Rasa generated caches
 **/.rasa/
+
+# Deployment-generated files
+backend/staticfiles/
+backend/config/settings.py.backup
